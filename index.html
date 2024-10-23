@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打磚塊遊戲</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="background" style="position: absolute; width: 100%; height: 100%; z-index: -1;"></div>
+    <div class="text-center">
+        <h1 id="gameTitle">打磚塊遊戲</h1>
+        <div id="difficultySelection">
+            <h2 style="margin-bottom: 10px;">選擇遊戲難度</h2>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button class="btn btn-primary mx-2" onclick="startGame('easy')">簡單</button>
+                <button class="btn btn-warning mx-2" onclick="startGame('medium')">中等</button>
+                <button class="btn btn-danger mx-2" onclick="startGame('hard')">困難</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="score" style="display:none;">分數: <span id="score">0</span></div>
+    <canvas id="gameCanvas" width="480" height="320" style="display:none;"></canvas>
+    <div class="game-over">
+        <h2>遊戲結束</h2>
+        <p>你的分數: <span id="finalScore"></span></p>
+        <div class="button-container">
+            <button id="restartBtn" class="btn btn-primary">重新開始</button>
+            <button id="menuBtn" class="btn btn-secondary">返回選單</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

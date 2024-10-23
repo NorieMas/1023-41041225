@@ -1,0 +1,205 @@
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let ballRadius = 10;
+let x, y, dx, dy;
+let paddleHeight = 10;
+let paddleWidth = 75;
+let paddleX;
+let brickRowCount, brickColumnCount;
+let brickWidth = 75;
+let brickHeight = 20;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft;
+let bricks = [];
+let score = 0;
+let gameOver = false;
+
+// 磚塊強度設置
+const brickStrengths = {
+    easy: 1,   // 簡單: 一次擊打
+    medium: 2, // 中等: 兩次擊打
+    hard: 3    // 困難: 三次擊打
+};
+
+// 磚塊顏色設置
+const brickColors = {
+    1: "red",      // 一次擊打
+    2: "#FFD700",  // 兩次擊打（亮金色）
+    3: "#90EE90"   // 三次擊打（淺綠色）
+};
+
+// 遊戲難度設定
+let currentDifficulty;
+
+function setDifficulty(difficulty) {
+    currentDifficulty = difficulty;
+    switch (difficulty) {
+        case 'easy':
+            dx = 1; // 較慢的球速
+            dy = -1;
+            brickRowCount = 2; // 磚塊數量少
+            break;
+        case 'medium':
+            dx = 2; // 中等球速
+            dy = -2;
+            brickRowCount = 5; // 磚塊數量中等
+            break;
+        case 'hard':
+            dx = 3; // 快速球速
+            dy = -3;
+            brickRowCount = 7; // 磚塊數量多
+            break;
+    }
+    brickColumnCount = 3; // 固定列數
+}
+
+// 開始遊戲
+// 開始遊戲
+function startGame(difficulty) {
+    setDifficulty(difficulty);
+    init();
+    document.getElementById("difficultySelection").style.display = "none"; // 隱藏難度選擇
+    document.getElementById("gameCanvas").style.display = "block"; // 顯示畫布
+}
+
+
+// 初始化遊戲
+function init() {
+    x = canvas.width / 2;
+    y = canvas.height - 30;
+    paddleX = (canvas.width - paddleWidth) / 2;
+    score = 0;
+    gameOver = false;
+
+    // 重置磚塊
+    brickOffsetLeft = (canvas.width - (brickWidth * brickColumnCount + brickPadding * (brickColumnCount - 1))) / 2;
+    bricks = [];
+    for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++) {
+            const strength = Math.random() < 0.5 ? brickStrengths[currentDifficulty] : 1;
+            bricks[c][r] = { x: 0, y: 0, status: strength };
+        }
+    }
+
+    document.getElementById("finalScore").innerText = "";
+    document.querySelector(".game-over").style.display = "none";
+    document.getElementById("score").innerText = score;
+    document.querySelector(".score").style.display = "block"; // 顯示分數
+    draw();
+}
+
+// 控制擋板的事件處理
+document.addEventListener("mousemove", mouseMoveHandler, false);
+document.getElementById("restartBtn").addEventListener("click", init);
+
+// 滑鼠移動事件處理
+function mouseMoveHandler(e) {
+    const relativeX = e.clientX - canvas.getBoundingClientRect().left;
+    if (relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth / 2;
+    }
+}
+
+// 碰撞檢測
+function collisionDetection() {
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+            const b = bricks[c][r];
+            if (b.status > 0) {
+                if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                    dy = -dy;
+                    b.status--; // 減少磚塊狀態
+                    score += (b.status === 0) ? 1 : 0; // 磚塊被擊破後加分
+                    document.getElementById("score").innerText = score;
+                    if (score === brickRowCount * brickColumnCount) {
+                        alert("恭喜！你擊破了所有磚塊！");
+                        document.location.reload();
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 繪製球
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+// 繪製擋板
+function drawPaddle() {
+    ctx.beginPath();
+    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+
+// 繪製磚塊
+function drawBricks() {
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+            const b = bricks[c][r];
+            if (b.status > 0) {
+                const brickX = brickOffsetLeft + c * (brickWidth + brickPadding);
+                const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+                b.x = brickX;
+                b.y = brickY;
+                
+                // 根據狀態設定顏色
+                ctx.beginPath();
+                ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                ctx.fillStyle = brickColors[b.status] || "#0095DD"; // 預設顏色
+                ctx.fill();
+                ctx.closePath();
+                
+                // 顯示剩餘擊打次數
+                ctx.fillStyle = "#fff";
+                ctx.font = "16px Arial";
+                ctx.fillText(b.status, brickX + brickWidth / 2 - 10, brickY + brickHeight / 2 + 5);
+            }
+        }
+    }
+}
+
+// 繪製遊戲元素
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBricks();
+    drawBall();
+    drawPaddle();
+    collisionDetection();
+
+    if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+        dx = -dx;
+    }
+
+    if (y + dy < ballRadius) {
+        dy = -dy;
+    } else if (y + dy > canvas.height - ballRadius) {
+        if (x + ballRadius > paddleX && x - ballRadius < paddleX + paddleWidth) {
+            dy = -dy;
+            const angleOffset = (x - (paddleX + paddleWidth / 2)) / (paddleWidth / 2);
+            dx += angleOffset * 0.5;
+        } else {
+            gameOver = true;
+            document.getElementById("finalScore").innerText = score;
+            document.querySelector(".game-over").style.display = "block";
+            return;
+        }
+    }
+
+    x += dx;
+    y += dy;
+    requestAnimationFrame(draw);
+}
+
+// 開始遊戲
+init();
