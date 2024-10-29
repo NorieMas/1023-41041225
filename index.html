@@ -23,7 +23,7 @@
 
     <div class="score" style="display:none;">分數: <span id="score">0</span></div>
     <canvas id="gameCanvas" width="480" height="320" style="display:none;"></canvas>
-    <div class="game-over">
+    <div class="game-over text-center">
         <h2>遊戲結束</h2>
         <p>你的分數: <span id="finalScore"></span></p>
         <div class="button-container">
@@ -32,7 +32,33 @@
         </div>
     </div>
 
+    <!-- 新增的模態框 -->
+    <div class="modal fade" id="levelCompleteModal" tabindex="-1" role="dialog" aria-labelledby="levelCompleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="levelCompleteModalLabel">恭喜！你已完成關卡</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    點擊 "繼續" 按鈕，開始第 <span id="nextLevel"></span> 關。
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="continueBtn">繼續</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script/background.js"></script>
+    <script src="script/eventHandlers.js"></script>
+    <script src="script/collision.js"></script>
+    <script src="script/gameElements.js"></script>
+    <script src="script/main.js"></script>
 </body>
 </html>

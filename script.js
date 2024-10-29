@@ -93,8 +93,8 @@ function init() {
     paddleX = (canvas.width - paddleWidth) / 2;
     originalPaddleY = canvas.height - paddleHeight; // 記錄擋板的原始Y座標
     paddleY = originalPaddleY; // 初始化擋板的當前Y座標
-    score = 0;
     gameOver = false;
+    score = 0;
     lastScore = 0; // 重置 lastScore
 
     brickOffsetLeft = (canvas.width - (brickWidth * brickColumnCount + brickPadding * (brickColumnCount - 1))) / 2;
@@ -106,10 +106,7 @@ function init() {
         }
     }
 
-    // 重置球的速度
-    dx = (currentDifficulty === 'hard') ? 4 : (currentDifficulty === 'medium') ? 3 : 2;
-    dy = -Math.abs(dx); // 確保 dy 是負值以向上移動
-
+    dy = -Math.abs(dx);
     draw();
 }
 

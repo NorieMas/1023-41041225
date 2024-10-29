@@ -11,7 +11,7 @@ body {
 #background {
     background-size: cover;
     background-position: center;
-    z-index: -1; /* 確保背景在最底層 */
+    z-index: -1; 
 }
 
 #difficultySelection {
@@ -25,7 +25,7 @@ body {
     border: 2px solid #333; 
     background: #fff; 
     margin-bottom: 20px; 
-    display: none; /* 初始隱藏畫布 */
+    display: none; 
 }
 
 .score { 
@@ -38,7 +38,7 @@ body {
     position: absolute; 
     top: 50%; 
     left: 50%; 
-    transform: translate(-50%, -50%); /* 垂直和水平置中 */
+    transform: translate(-50%, -50%);
     text-align: center; 
     background: rgba(255, 255, 255, 0.9); 
     padding: 40px; 
@@ -49,12 +49,12 @@ body {
 
 .button-container {
     display: flex;
-    justify-content: center; /* 水平置中 */
-    margin-top: 20px; /* 添加一些間距 */
+    justify-content: center; 
+    margin-top: 20px; 
 }
 
 .button-container .btn {
-    margin: 0 10px; /* 按鈕之間的間距 */
+    margin: 0 10px; 
 }
 
 .btn-primary { 
@@ -70,5 +70,5 @@ body {
 
 .btn-secondary {
     font-size: 20px; 
-    margin-top: 10px; /* Add some margin for spacing */
+    margin-top: 10px; 
 }
